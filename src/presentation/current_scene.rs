@@ -1,22 +1,57 @@
 use druid::widget::
     {
         Align, 
-        Flex, 
         Label, 
+        Container,
+        Painter,
+        Scroll,
+        Image,
    };
 use druid::
     {
-       Widget, 
+        Widget, 
+        WidgetExt,
+        Env,
+        ImageBuf,
+        RenderContext,
+        Lens,
+        LensExt,
     };
 
-use crate::ApplicationState;
+use druid::piet::InterpolationMode;
 
+use crate::ApplicationState;
+use crate::presentation::Scene;
 
 pub fn build_current_scene() -> impl Widget<ApplicationState> {
-    let label = Label::
-        new("scenes");
+    let container = Container::new(scene())
+        .lens(ApplicationState::current_scene);
+    Align::centered(container)
+}
+pub fn scene() -> impl Widget<Scene> {
+    let image = Image::new(ImageBuf::empty());
+    Align::centered(image)
+}
+pub fn build_scene() -> impl Widget<Scene> {
+    let label = Label::new(|data: &Scene, _env: &Env| data.name.clone());
+    let painter = Painter::new(
+        |ctx, data: &Scene, _env| {
+             let rect = ctx.size().to_rect();
+             let img = if let Some(im) = data.full_image.clone() {
+                im
+             } else {
+                ImageBuf::empty()
+             };
+             let img = img.to_image(ctx.render_ctx);
+             ctx.with_save(|ctx| {
+                 ctx.draw_image(
+                     &img, 
+                     rect, 
+                     InterpolationMode::Bilinear);
+             });
+        });
+    let container = Container::new(label)
+        .background(painter);
 
-    Align::centered(label)
-
-
+    Align::centered(container)
 }

@@ -3,13 +3,15 @@ use druid::widget::
         Align, 
         Split,
     };
+
 use druid::
     {
         Widget,
         Data,
         Lens,
+        ImageBuf,
     };
-
+use chrono::Utc;
 
 mod scenes;
 mod current_scene;
@@ -23,7 +25,21 @@ pub struct Scene
     pub name: String,
     pub created_date: String,
     pub updated_date: String,
+    pub full_image: Option<ImageBuf>,
 }
+
+impl Scene {
+    pub fn new(name: String) -> Scene {
+        Scene { 
+            id: 0,
+            name,
+            created_date: Utc::now().to_string(),
+            updated_date: Utc::now().to_string(),
+            full_image: None,
+        }
+    }
+}
+
 
 pub fn build_presentation() -> impl Widget<ApplicationState> {
     let scenes_window = scenes::build_scenes_widgit();
