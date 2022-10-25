@@ -44,7 +44,6 @@ impl Scene {
 pub fn build_presentation() -> impl Widget<ApplicationState> {
     let scenes_window = scenes::build_scenes_widgit();
     let current_scene = current_scene::build_current_scene();
-
     let split = Split::columns(
                 scenes_window,
                 current_scene

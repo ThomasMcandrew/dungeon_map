@@ -4,8 +4,6 @@ use druid::widget::
         Label, 
         Container,
         Painter,
-        Scroll,
-        Image,
    };
 use druid::
     {
@@ -14,8 +12,6 @@ use druid::
         Env,
         ImageBuf,
         RenderContext,
-        Lens,
-        LensExt,
     };
 
 use druid::piet::InterpolationMode;
@@ -24,14 +20,11 @@ use crate::ApplicationState;
 use crate::presentation::Scene;
 
 pub fn build_current_scene() -> impl Widget<ApplicationState> {
-    let container = Container::new(scene())
+    let container = Container::new(build_scene())
         .lens(ApplicationState::current_scene);
     Align::centered(container)
 }
-pub fn scene() -> impl Widget<Scene> {
-    let image = Image::new(ImageBuf::empty());
-    Align::centered(image)
-}
+
 pub fn build_scene() -> impl Widget<Scene> {
     let label = Label::new(|data: &Scene, _env: &Env| data.name.clone());
     let painter = Painter::new(
