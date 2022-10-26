@@ -97,7 +97,7 @@ fn build_root_widget() -> impl Widget<ApplicationState> {
 
     Align::centered(container)
 }
-fn load_image() -> ImageBuf {
+pub fn load_image() -> ImageBuf {
     //let image_bytes = image::open("/home/thomas/dungeon_map/maps/ex1.jpg")
     //    .unwrap();
     //let bytes = image_bytes.as_bytes();

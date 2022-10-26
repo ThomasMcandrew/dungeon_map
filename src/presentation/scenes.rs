@@ -9,6 +9,7 @@ use druid::widget::
         Painter,
         Scroll,
         Padding,
+        Image,
     };
 use druid::
     {
@@ -93,10 +94,9 @@ pub fn build_scene_widgit() -> impl  Widget<Scene> {
                  ctx.draw_image(
                      &img, 
                      rect, 
-                     InterpolationMode::Bilinear);
+                     InterpolationMode::NearestNeighbor);
              });
         });
-
     let controller = ControllerHost::new(layout,click);
     let container = Container::new(controller)
         .background(painter)

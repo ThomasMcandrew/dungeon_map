@@ -2,6 +2,7 @@ use druid::widget::
     {
         Align, 
         Split,
+        Image,
     };
 
 use druid::
@@ -10,6 +11,8 @@ use druid::
         Data,
         Lens,
         ImageBuf,
+        EventCtx,
+        Env,
     };
 use chrono::Utc;
 
@@ -35,7 +38,7 @@ impl Scene {
             name,
             created_date: Utc::now().to_string(),
             updated_date: Utc::now().to_string(),
-            full_image: None,
+            full_image: Some(crate::load_image()),
         }
     }
 }
@@ -44,6 +47,7 @@ impl Scene {
 pub fn build_presentation() -> impl Widget<ApplicationState> {
     let scenes_window = scenes::build_scenes_widgit();
     let current_scene = current_scene::build_current_scene();
+
     let split = Split::columns(
                 scenes_window,
                 current_scene
