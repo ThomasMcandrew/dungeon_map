@@ -19,6 +19,9 @@ use druid::
 
 use druid::piet::ImageFormat;
 use imagesize::size;
+use std::path::Path;
+
+use image::guess_format;
 
 const WINDOW_TITLE: LocalizedString<ApplicationState> = 
     LocalizedString::new("Hello World!");
@@ -52,33 +55,6 @@ fn main() {
             presentation::Scene::new("one".into()),
             presentation::Scene::new("two".into()),
             presentation::Scene::new("three".into()),
-            presentation::Scene::new("three".into()),
-            presentation::Scene::new("three".into()),
-            presentation::Scene::new("three".into()),
-            presentation::Scene::new("three".into()),
-            presentation::Scene::new("three".into()),
-            presentation::Scene::new("three".into()),
-            presentation::Scene::new("three".into()),
-            presentation::Scene::new("three".into()),
-            presentation::Scene::new("three".into()),
-            presentation::Scene::new("three".into()),
-            presentation::Scene::new("three".into()),
-            presentation::Scene::new("three".into()),
-            presentation::Scene::new("three".into()),
-            presentation::Scene::new("three".into()),
-            presentation::Scene::new("three".into()),
-            presentation::Scene::new("three".into()),
-            presentation::Scene::new("three".into()),
-            presentation::Scene::new("three".into()),
-            presentation::Scene::new("three".into()),
-            presentation::Scene::new("three".into()),
-            presentation::Scene::new("three".into()),
-            presentation::Scene::new("three".into()),
-            presentation::Scene::new("three".into()),
-            presentation::Scene::new("three".into()),
-            presentation::Scene::new("three".into()),
-            presentation::Scene::new("three".into()),
-            presentation::Scene::new("three".into()),
             presentation::Scene::new("four".into()),
             presentation::Scene::new("five".into())
         )),
@@ -92,28 +68,35 @@ fn main() {
 }
 
 fn build_root_widget() -> impl Widget<ApplicationState> {
-    let container = Container::new(presentation::build_presentation())
-        .border(Color::RED, 5.);
-
-    Align::centered(container)
+    let container = Container::new(presentation::build_presentation());
+    container
 }
+/*
+ * we want to make a save and load in the scene struct
+ * then make a button that adds one so we can see if they are 
+ * loading and saving correctly, then adding one switches the root
+ * widget to the builder and right now just has name and save button 
+ * stuff
+ * */
 pub fn load_image() -> ImageBuf {
-    //let image_bytes = image::open("/home/thomas/dungeon_map/maps/ex1.jpg")
-    //    .unwrap();
-    //let bytes = image_bytes.as_bytes();
-    let bytes = include_bytes!("/home/thomas/dungeon_map/maps/ex1.jpg");
+    let path = Path::new("/home/thomas/dungeon_map/maps/ex2.jpg");
+    
+    let image_bytes = image::io::Reader::open(path)
+        .unwrap()
+        .decode()
+        .unwrap();
+    
+    let bytes = image_bytes.as_bytes();
+    
     let (width, height) = match 
-        size("/home/thomas/dungeon_map/maps/ex1.jpg") {
+        size(path) {
             Ok(dim) => (dim.width, dim.height),
             Err(_) => (0,0) 
     };
-    let img = image::load_from_memory_with_format(
-            bytes, 
-            image::ImageFormat::Jpeg
-        ).unwrap();
     ImageBuf::from_raw(
-       img.into_bytes(),
-       ImageFormat::Rgb,
-       width,
-       height)
+        bytes,
+        ImageFormat::Rgb,
+        width,
+        height
+    )
 }

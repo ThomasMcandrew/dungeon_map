@@ -3,6 +3,7 @@ use druid::widget::
         Align, 
         Split,
         Image,
+        ViewSwitcher,
     };
 
 use druid::
@@ -11,8 +12,6 @@ use druid::
         Data,
         Lens,
         ImageBuf,
-        EventCtx,
-        Env,
     };
 use chrono::Utc;
 
@@ -33,12 +32,14 @@ pub struct Scene
 
 impl Scene {
     pub fn new(name: String) -> Scene {
+        let current_time = Utc::now();
         Scene { 
             id: 0,
             name,
-            created_date: Utc::now().to_string(),
+            created_date: format!("{:?}{:?}",
+                current_time.date(),current_time.time()),
             updated_date: Utc::now().to_string(),
-            full_image: Some(crate::load_image()),
+            full_image: Some(crate::load_image())
         }
     }
 }
