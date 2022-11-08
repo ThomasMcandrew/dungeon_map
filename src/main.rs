@@ -1,9 +1,4 @@
-use druid::widget::
-    {
-        Align, 
-        Container,
-        
-    };
+use druid::widget::Container;
 use druid::
     {
         AppLauncher, 
@@ -12,7 +7,6 @@ use druid::
         LocalizedString, 
         Widget, 
         WindowDesc, 
-        Color,
         ImageBuf,
         im::Vector, 
     };
@@ -21,7 +15,6 @@ use druid::piet::ImageFormat;
 use imagesize::size;
 use std::path::Path;
 
-use image::guess_format;
 
 const WINDOW_TITLE: LocalizedString<ApplicationState> = 
     LocalizedString::new("Hello World!");

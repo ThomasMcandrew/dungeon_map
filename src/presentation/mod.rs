@@ -2,8 +2,6 @@ use druid::widget::
     {
         Align, 
         Split,
-        Image,
-        ViewSwitcher,
     };
 
 use druid::
