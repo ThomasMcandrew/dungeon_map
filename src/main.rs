@@ -24,21 +24,13 @@ fn idk() -> impl IsA<Widget> {
         c.set_line_width(1.);
 
         let pbx = Pixbuf::from_file("sky-background.png").expect("");
-        let bytes = pbx.pixel_bytes().expect("");
-        for x in 0..pbx.width() {
-            for y in 0..pbx.height() {
-                let color = bytes[(x + (y * pbx.width())) as usize];
-                
-                let red = (color.rotate_right(16)) & 0xFF;
-                let green = (color.rotate_right(8)) & 0xFF;
-                let blue = (color) & 0xFF;
-                c.set_source_rgb(red as f64,green as f64,blue as f64);
-                c.rectangle(x as f64,y as f64,1.,1.);
-                c.fill().expect("Failed to paint");
-            }
-        }
-    });
+        let foo = pbx.new_subpixbuf(32,32,32,32).expect("failed to get subpix");
 
+        c.set_source_pixbuf(&foo,0.,32.);
+
+        c.paint().expect("Failed to paint");
+    });
+    
     let display = gtk::gdk::Display::default().expect("No Default display");
     let im = ImageSurface::create(Format::ARgb32,32,32).expect("Invalid surface");
     draw
