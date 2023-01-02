@@ -1,5 +1,6 @@
 use gtk4 as gtk;
 use gtk::prelude::*;
+use gtk::gdk::cairo::*;
 use gtk::
     {
         Application,
@@ -11,24 +12,46 @@ use gtk::
         Button,
         FlowBox,
         FlowBoxChild,
-        Image, 
         DrawingArea,
         
+        Image,
     };
+use gtk::gdk_pixbuf::*;
 
-fn idk() {
+fn idk() -> impl IsA<Widget> {
     let draw = DrawingArea::new();
-    let test = Image::from_file("sky-background.png"); 
-    
+    draw.set_draw_func(|da: &DrawingArea,c: &Context,w: i32,h: i32|{
+        c.set_line_width(1.);
+
+        let pbx = Pixbuf::from_file("sky-background.png").expect("");
+        let bytes = pbx.pixel_bytes().expect("");
+        for x in 0..pbx.width() {
+            for y in 0..pbx.height() {
+                let color = bytes[(x + (y * pbx.width())) as usize];
+                
+                let red = (color.rotate_right(16)) & 0xFF;
+                let green = (color.rotate_right(8)) & 0xFF;
+                let blue = (color) & 0xFF;
+                c.set_source_rgb(red as f64,green as f64,blue as f64);
+                c.rectangle(x as f64,y as f64,1.,1.);
+                c.fill().expect("Failed to paint");
+            }
+        }
+    });
+
+    let display = gtk::gdk::Display::default().expect("No Default display");
+    let im = ImageSurface::create(Format::ARgb32,32,32).expect("Invalid surface");
+    draw
 }
 
 fn map_screen() -> impl IsA<Widget> {
-    let test = Image::from_file("sky-background.png"); 
+    // let test = Image::from_file("sky-background.png"); 
 
-    let scroll = ScrolledWindow::new();
-    scroll.set_child(Some(&test));
-    
-    scroll
+    // let scroll = ScrolledWindow::new();
+    // scroll.set_child(Some(&test));
+    // 
+    // scroll
+    idk()
 }
 
 fn root() -> impl IsA<Widget> {
