@@ -24,7 +24,6 @@ struct SimpleImage {
     height: i32,
     sprite_width: i32,
     sprite_height: i32,
-    im_vec: Vec<Pixbuf>,
 }
 impl SimpleImage {
     pub fn from_image(image: Pixbuf, w: i32, h: i32) -> Self {
@@ -39,18 +38,18 @@ impl SimpleImage {
         }
         
         let draw = DrawingArea::new();
-        draw.set_draw_func(|da: &DrawingArea,c: &Context,w: i32,h: i32|{
+        draw.set_draw_func(move |_da: &DrawingArea,c: &Context,w: i32,h: i32|{
             c.set_line_width(1.);
             
             for i in 0..images_vec.len() {
-                let si = images_vec[i];
+                let si = images_vec[i].clone();
                 c.set_source_pixbuf(&si,
                     (sprite_w * (i as i32 / w)).into(),
                     (sprite_h * (i as i32 / h)).into());
+                c.paint().expect("Failed to paint");
             }
     
     
-            c.paint().expect("Failed to paint");
         });
         SimpleImage {
             area: DrawingArea::new(),
